@@ -233,7 +233,10 @@ If something glitches or looks wrong:
 3. If it's the app icons, try turning off "Squircle icons", or "High
    resolution icons" if apps' custom icons don't show up.
 
-## Credits
+## Credits & Attribution
+
+- **Forked and maintained by:** [adnan207](https://github.com/adnan207/Doc-MacOs-Windhawk) (Start button restoration and Search dock integration).
+- **Original Mod Author:** [Zach Vaughn](https://github.com/zachvdev) (original creator of "MacOS Style Dock" for Windhawk).
 
 The taskbar height code is based on m417z's "Taskbar height and icon size".
 Icon dragging and right-click menu placement follow his "Multirow taskbar for
