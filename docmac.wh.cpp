@@ -1353,6 +1353,12 @@ Button &TrackButton(wux::FrameworkElement const &el) {
 
 // The taskbar sizes buttons for a 24px icon; a minimum width makes room.
 void ApplyButtonWidth(Button &b, wux::FrameworkElement const &button) {
+  if (IsSearchButton(button)) {
+    if (button.Width() != g_size.buttonWidth)
+      button.Width(g_size.buttonWidth);
+    if (button.Height() != g_size.buttonWidth)
+      button.Height(g_size.buttonWidth);
+  }
   auto root = b.root.get();
   if (!root) {
     if (wuxm::VisualTreeHelper::GetChildrenCount(button) == 0)
@@ -1366,6 +1372,12 @@ void ApplyButtonWidth(Button &b, wux::FrameworkElement const &button) {
   }
   if (root.MinWidth() != g_size.buttonWidth)
     root.MinWidth(g_size.buttonWidth);
+  if (IsSearchButton(button)) {
+    if (root.Width() != g_size.buttonWidth)
+      root.Width(g_size.buttonWidth);
+    if (root.Height() != g_size.buttonWidth)
+      root.Height(g_size.buttonWidth);
+  }
 }
 
 // Below Size 41, buttons are wider than their spot (never narrower than the
@@ -1434,19 +1446,49 @@ std::vector<Icon> GetIcons(wux::UIElement const &parent) {
   for (auto &b : *g_buttons) {
     auto el = b.element.get();
     if (!el || el.Visibility() != Visibility::Visible ||
-        el.ActualWidth() <= 0 ||
-        wuxm::VisualTreeHelper::GetParent(el) != parent) {
+        el.ActualWidth() <= 0) {
       continue;
     }
-    auto slot = wuxc::Primitives::LayoutInformation::GetLayoutSlot(el);
-    auto margin = el.Margin();
-    float x = slot.X + (float)margin.Left;
-    float y = slot.Y + (float)margin.Top;
-    // Recycled buttons are parked out of view.
-    if (y < -el.ActualHeight() || y > el.ActualHeight())
+    auto elParent = wuxm::VisualTreeHelper::GetParent(el);
+    bool isDirectChild = (elParent == parent);
+    bool isSearchInSameFrame = false;
+    if (!isDirectChild && IsSearchButton(el)) {
+      auto pEl = parent.try_as<wux::FrameworkElement>();
+      auto f1 = pEl ? FindTaskbarFrame(pEl) : nullptr;
+      auto f2 = FindTaskbarFrame(el);
+      if (!f1 || !f2 || f1 == f2) {
+        isSearchInSameFrame = true;
+      }
+    }
+    if (!isDirectChild && !isSearchInSameFrame) {
       continue;
+    }
+
+    float x = 0, y = 0, slotLeft = 0;
+    if (isDirectChild) {
+      auto slot = wuxc::Primitives::LayoutInformation::GetLayoutSlot(el);
+      auto margin = el.Margin();
+      x = slot.X + (float)margin.Left;
+      y = slot.Y + (float)margin.Top;
+      slotLeft = slot.X;
+    } else {
+      try {
+        auto transform = el.TransformToVisual(parent);
+        auto pt = transform.TransformPoint({0, 0});
+        x = pt.X;
+        y = pt.Y;
+        slotLeft = pt.X;
+      } catch (...) {
+        continue;
+      }
+    }
+
+    // Recycled buttons are parked out of view.
+    if (y < -el.ActualHeight() * 4 || y > el.ActualHeight() * 4)
+      continue;
+
     icons.push_back(
-        {el, x, y, (float)el.ActualWidth(), (float)el.ActualHeight(), slot.X});
+        {el, x, y, (float)el.ActualWidth(), (float)el.ActualHeight(), slotLeft});
   }
   return icons;
 }
@@ -1972,8 +2014,26 @@ Plate *GetRowPlate(wux::DependencyObject const &row) {
   return nullptr;
 }
 
+Plate *FindPlateForElement(wux::FrameworkElement const &el) {
+  if (!el || !g_plates || g_plates->empty())
+    return nullptr;
+  if (auto parent = wuxm::VisualTreeHelper::GetParent(el)) {
+    if (auto p = GetRowPlate(parent))
+      return p;
+  }
+  if (auto frame = FindTaskbarFrame(el)) {
+    for (auto &p : *g_plates) {
+      if (p.frame.get() == frame)
+        return &p;
+    }
+  }
+  return &g_plates->front();
+}
+
 float GetRowOffsetY(wux::DependencyObject const &row) {
   Plate *p = GetRowPlate(row);
+  if (!p && g_plates && !g_plates->empty())
+    p = &g_plates->front();
   return p ? p->offsetY : 0;
 }
 
@@ -2196,7 +2256,7 @@ struct IconSwap {
 IconLook LookFor(wux::FrameworkElement const &button) {
   if (HasFinderIcon() && IsFileExplorer(button))
     return IconLook::Finder;
-  if (g_settings.squircleIcons && IsAppButton(button))
+  if (g_settings.squircleIcons && (IsAppButton(button) || IsSearchButton(button)))
     return IconLook::Squircle;
   return IconLook::Stock;
 }
@@ -3632,7 +3692,9 @@ void SetScale(wux::FrameworkElement const &el, float s, float tx = 0) {
   float pivotY = (float)el.ActualHeight() / 2 + g_size.icon / 2;
   visual.CenterPoint({(float)el.ActualWidth() / 2, pivotY, 0});
   visual.Scale({s, s, 1});
-  SetTranslation(el, tx, GetRowOffsetY(wuxm::VisualTreeHelper::GetParent(el)));
+  Plate *p = FindPlateForElement(el);
+  float offsetY = p ? p->offsetY : GetRowOffsetY(wuxm::VisualTreeHelper::GetParent(el));
+  SetTranslation(el, tx, offsetY);
   PlaceDot(el, tx);
   PlaceStockIndicators(el, s);
 }
