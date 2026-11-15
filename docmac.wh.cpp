@@ -1,11 +1,10 @@
-// clang-format off
 // ==WindhawkMod==
 // @id              macos-style-dock-fork
 // @name            MacOS Style Dock - Fork
 // @description     Turns the Windows 11 taskbar into a macOS-style dock with magnifying icons
 // @version         1.1.2
-// @author          Zach Vaughn
-// @github          https://github.com/zachvdev
+// @author          adnan207
+// @github          https://github.com/adnan207/Doc-MacOs-Windhawk
 // @include         explorer.exe
 // @architecture    x86-64
 // @compilerOptions -lole32 -loleaut32 -lruntimeobject -lversion -lgdi32 -lshell32 -lshcore -ladvapi32 -ldwmapi -lgdiplus -ld2d1
