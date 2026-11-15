@@ -1,15 +1,14 @@
+// clang-format off
 // ==WindhawkMod==
 // @id              macos-style-dock-fork
 // @name            MacOS Style Dock - Fork
-// @description     Turns the Windows 11 taskbar into a macOS-style dock with
-// magnifying icons
+// @description     Turns the Windows 11 taskbar into a macOS-style dock with magnifying icons
 // @version         1.1.2
 // @author          Zach Vaughn
 // @github          https://github.com/zachvdev
 // @include         explorer.exe
 // @architecture    x86-64
-// @compilerOptions -lole32 -loleaut32 -lruntimeobject -lversion -lgdi32
-// -lshell32 -lshcore -ladvapi32 -ldwmapi -lgdiplus -ld2d1
+// @compilerOptions -lole32 -loleaut32 -lruntimeobject -lversion -lgdi32 -lshell32 -lshcore -ladvapi32 -ldwmapi -lgdiplus -ld2d1
 // @license         GPL-3.0
 // ==/WindhawkMod==
 
@@ -305,12 +304,10 @@ Apple's curve.
 - spacing:
   - horizontal: 13
     $name: Horizontal padding
-    $description: Between the outer icons and the ends of the dock. Default
-is 13.
+    $description: Between the outer icons and the ends of the dock. Default is 13.
   - vertical: 12
     $name: Vertical padding
-    $description: Between the icons and the top and bottom of the dock. Default
-is 12.
+    $description: Between the icons and the top and bottom of the dock. Default is 12.
   - buttons: 12
     $name: Icon spacing
     $description: Between neighboring icons. Default is 12.
@@ -321,8 +318,8 @@ is 12.
     $name: Squircle icons
     $description: >-
       App icons redrawn as macOS-style tiles: square icons fill a squircle,
-      other shapes sit on a tile of the Squircle color. May take a few seconds
-to enable. Default is on.
+      other shapes sit on a tile of the Squircle color. May take a few seconds to
+      enable. Default is on.
   - squircleColor: auto
     $name: Squircle color
     $description: >-
@@ -335,8 +332,7 @@ to enable. Default is on.
     - custom: Custom
   - squircleCustomColor: FFFFFF
     $name: Custom squircle color
-    $description: Used when Squircle color is Custom, as 6 hex digits. Default
-is FFFFFF.
+    $description: Used when Squircle color is Custom, as 6 hex digits. Default is FFFFFF.
   - explorerFirst: true
     $name: Keep File Explorer first
     $description: >-
@@ -390,8 +386,7 @@ is FFFFFF.
       image. Default is 25.
   - finderSize: 100
     $name: File Explorer icon size
-    $description: The artwork's size next to other icons, in percent. Default is
-100.
+    $description: The artwork's size next to other icons, in percent. Default is 100.
   - trashEmptyPath: ""
     $name: Recycle Bin icon, empty
     $description: >-
@@ -409,12 +404,13 @@ is FFFFFF.
       image. Default is 25.
   - trashSize: 100
     $name: Recycle Bin icon size
-    $description: The artwork's size next to other icons, in percent. Default is
-100. $name: Custom icons $description: >- Your own icons for File Explorer and
-the Recycle Bin, from image files on your PC. PNGs with transparency work best:
-256x256 for File Explorer and 240x256 for the Recycle Bin, with 25 pixels of
-empty space around the artwork. Keep the files where they are; the mod loads
-them from there.
+    $description: The artwork's size next to other icons, in percent. Default is 100.
+  $name: Custom icons
+  $description: >-
+    Your own icons for File Explorer and the Recycle Bin, from image files on your PC.
+    PNGs with transparency work best: 256x256 for File Explorer and 240x256 for the
+    Recycle Bin, with 25 pixels of empty space around the artwork. Keep the files
+    where they are; the mod loads them from there.
 - hotCorners:
   - bottomLeft: taskView
     $name: Bottom left
@@ -447,17 +443,15 @@ them from there.
     $description: In pixels at Size 60, scaling with the dock. Default is 6.
   - glowOpacity: 60
     $name: Glow opacity
-    $description: Relative to the dock's Opacity, so 100 matches it. Default
-is 60.
+    $description: Relative to the dock's Opacity, so 100 matches it. Default is 60.
   - glowColor: ""
     $name: Glow color
-    $description: 6 hex digits, or blank for a lighter shade of the dock's
-color. Default is blank.
+    $description: 6 hex digits, or blank for a lighter shade of the dock's color. Default is blank.
   - tooltipColor: BFBFBF
     $name: Tooltip color
-    $description: Behind app names, as 6 hex digits. The text turns light on
-dark colors. Default is BFBFBF. $name: Advanced adjustments $description: The
-inner glow of the macOS border, and the app name tooltips.
+    $description: Behind app names, as 6 hex digits. The text turns light on dark colors. Default is BFBFBF.
+  $name: Advanced adjustments
+  $description: The inner glow of the macOS border, and the app name tooltips.
 */
 // ==/WindhawkModSettings==
 
